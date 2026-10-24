@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#07130f">
+<title>Desafio Pix — Jogos e Desafios</title>
+<style>
+:root{--bg:#07130f;--panel:#10231b;--line:#234936;--green:#45f08a;--muted:#b9cfc2;--white:#f5fff8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#153c28 0,transparent 35%),var(--bg);color:var(--white);font:16px system-ui,-apple-system,Segoe UI,sans-serif}
+header,main,footer{max-width:1000px;margin:auto;padding:20px}header{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);gap:12px}.brand{font-size:1.35rem;font-weight:900}.brand span{color:var(--green)}.pill{border:1px solid var(--line);border-radius:999px;padding:8px 12px;color:var(--muted);font-size:.85rem}
+.hero{padding:34px 0 24px;display:grid;grid-template-columns:1.4fr 1fr;gap:24px;align-items:center}.eyebrow{color:var(--green);font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:.8rem}h1{font-size:clamp(2rem,5vw,3.4rem);line-height:1.02;margin:10px 0 14px}p{color:var(--muted);line-height:1.55}.balance{background:linear-gradient(145deg,#163d29,#0d2018);border:1px solid #2f7449;border-radius:24px;padding:24px;box-shadow:0 15px 50px #0005}.balance small{color:var(--muted)}.points{font-size:2.4rem;font-weight:900;color:var(--green);margin:4px 0}.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.card{background:#0c1d15;border:1px solid var(--line);border-radius:18px;padding:18px}.card h3{margin:8px 0}.emoji{font-size:1.8rem}.btn{background:var(--green);color:#042012;font-weight:850;border:0;border-radius:12px;padding:12px 16px;cursor:pointer;font-size:1rem}.btn:focus{outline:3px solid white;outline-offset:2px}.btn.secondary{background:transparent;border:1px solid var(--green);color:var(--green)}.btn:disabled{opacity:.45;cursor:not-allowed}.section-title{margin:28px 0 14px}.note{border:1px solid #7c6425;background:#2a2410;color:#ffe7a3;padding:14px;border-radius:14px;margin:22px 0}.task{display:flex;justify-content:space-between;align-items:center;gap:12px}.tiny{font-size:.85rem}.footer{border-top:1px solid var(--line);margin-top:30px;padding-top:20px;color:var(--muted);font-size:.85rem}
+#quizArea{margin-top:12px}.answer{display:block;width:100%;text-align:left;margin:8px 0;background:#13291e;color:var(--white);border:1px solid var(--line);padding:12px;border-radius:10px;cursor:pointer}.answer:hover{border-color:var(--green)}#toast{min-height:24px;color:var(--green);font-weight:700}
+@media(max-width:700px){header{align-items:flex-start;flex-direction:column}.hero{grid-template-columns:1fr;padding-top:24px}.grid{grid-template-columns:1fr}.balance{padding:18px}}
+</style>
+</head>
+<body>
+<header><div class="brand">🎮 Desafio<span>Pix</span></div><div class="pill">Versão de demonstração · pontos virtuais</div></header>
+<main>
+<section class="hero">
+<div><div class="eyebrow">Jogue • Aprenda • Pontue</div><h1>Desafios rápidos.<br><span style="color:var(--green)">Pontos de verdade*</span></h1><p>Responda perguntas, resolva desafios e acompanhe sua pontuação. Uma versão inicial para testar a ideia com segurança.</p><button class="btn" onclick="document.querySelector('#jogos').scrollIntoView({behavior:'smooth'})">Começar a jogar ↓</button></div>
+<div class="balance"><small>SEUS PONTOS DE DEMONSTRAÇÃO</small><div class="points" id="points">0 pts</div><p class="tiny">Os pontos ficam salvos neste navegador. Não são dinheiro e não podem ser sacados.</p><button class="btn secondary" onclick="resetPoints()">Reiniciar pontos</button></div>
+</section>
+<div class="note"><strong>Importante:</strong> este protótipo não faz pagamentos Pix nem promete dinheiro. Recompensas em dinheiro só devem ser anunciadas quando houver orçamento real, regras transparentes e um responsável adulto cuidando da operação.</div>
+<h2 class="section-title" id="jogos">Escolha um desafio</h2>
+<section class="grid">
+<article class="card"><div class="emoji">🧠</div><h3>Quiz relâmpago</h3><p>Responda uma pergunta de conhecimentos gerais.</p><button class="btn" onclick="startQuiz()">Jogar quiz · +10 pts</button><div id="quizArea"></div><div id="toast" aria-live="polite"></div></article>
+<article class="card"><div class="emoji">🔢</div><h3>Desafio da matemática</h3><p>Resolva uma conta rápida e ganhe pontos virtuais.</p><div id="mathQuestion" style="font-weight:800;margin:10px 0">Quanto é 7 × 6?</div><input id="mathAnswer" inputmode="numeric" aria-label="Resposta da conta" placeholder="Sua resposta" style="width:100%;padding:12px;border-radius:10px;border:1px solid var(--line);background:#07130f;color:white;margin-bottom:10px"><button class="btn" onclick="checkMath()">Responder · +10 pts</button></article>
+<article class="card"><div class="emoji">📅</div><h3>Desafio diário</h3><p>Visite a página e marque seu desafio de hoje como concluído.</p><div id="dailyStatus" class="tiny" style="margin:10px 0">Disponível hoje</div><button class="btn" id="dailyBtn" onclick="dailyChallenge()">Concluir · +5 pts</button></article>
+</section>
+<h2 class="section-title">Como funcionaria uma versão real?</h2>
+<section class="grid">
+<div class="card"><h3>1. Regras claras</h3><p>Publicar regras de participação, critérios de pontuação, limites e contato de suporte.</p></div>
+<div class="card"><h3>2. Orçamento real</h3><p>Definir de onde virá o dinheiro das recompensas antes de anunciar prêmios.</p></div>
+<div class="card"><h3>3. Pagamentos seguros</h3><p>Um responsável adulto deve verificar obrigações legais, privacidade e um provedor de pagamentos adequado antes de ativar Pix.</p></div>
+</section>
+<div class="note">Não peça CPF, senha bancária, código de autenticação ou chave Pix nesta demonstração. Não cobre taxa para liberar supostos saques.</div>
+</main>
+<footer class="footer">DesafioPix · Protótipo educativo independente. Não afiliado ao Banco Central. <br>© 2026 · <a href="#jogos" style="color:var(--green)">Voltar aos jogos</a></footer>
+<script>
+const STORE='desafiopix_demo_points_v1';
+let points=Number(localStorage.getItem(STORE)||0);
+function render(){document.getElementById('points').textContent=points+' pts';}
+function addPoints(n){points+=n;localStorage.setItem(STORE,String(points));render();}
+function resetPoints(){if(confirm('Quer zerar os pontos de demonstração?')){points=0;localStorage.setItem(STORE,'0');render();}}
+const questions=[
+ {q:'Qual planeta é conhecido como Planeta Vermelho?',a:['Marte','Vênus','Saturno'],correct:0},
+ {q:'Quantos lados tem um hexágono?',a:['5','6','8'],correct:1},
+ {q:'Qual é o maior oceano da Terra?',a:['Atlântico','Índico','Pacífico'],correct:2}
+];
+function startQuiz(){
+ const q=questions[Math.floor(Math.random()*questions.length)], area=document.getElementById('quizArea');
+ area.innerHTML='<p><strong>'+q.q+'</strong></p>'+q.a.map((a,i)=>'<button class="answer" onclick="answerQuiz('+i+','+q.correct+')">'+a+'</button>').join('');
+ document.getElementById('toast').textContent='';
+}
+function answerQuiz(i,c){const area=document.getElementById('quizArea');if(i===c){addPoints(10);document.getElementById('toast').textContent='Acertou! +10 pontos virtuais.';}else{document.getElementById('toast').textContent='Quase! Tente outro quiz.';}area.innerHTML='';}
+function checkMath(){const v=document.getElementById('mathAnswer').value.trim();if(v==='42'){addPoints(10);alert('Correto! +10 pontos virtuais.');}else{alert('Ainda não! Tente novamente.');}}
+function dailyChallenge(){const key='desafiopix_daily_'+new Date().toISOString().slice(0,10);if(localStorage.getItem(key)){alert('Você já concluiu o desafio de hoje!');return;}localStorage.setItem(key,'1');addPoints(5);document.getElementById('dailyStatus').textContent='Concluído hoje ✓';document.getElementById('dailyBtn').disabled=true;document.getElementById('dailyBtn').textContent='Concluído';}
+(function(){render();const key='desafiopix_daily_'+new Date().toISOString().slice(0,10);if(localStorage.getItem(key)){document.getElementById('dailyStatus').textContent='Concluído hoje ✓';document.getElementById('dailyBtn').disabled=true;document.getElementById('dailyBtn').textContent='Concluído';}})();
+</script>
+</body></html>
